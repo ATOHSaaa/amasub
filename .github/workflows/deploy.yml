@@ -33,8 +33,6 @@ jobs:
       - name: Build site
         run: npm run build
         env:
-          PUBLIC_GA4_MEASUREMENT_ID: ${{ vars.PUBLIC_GA4_MEASUREMENT_ID }}
-          PUBLIC_CLARITY_PROJECT_ID: ${{ vars.PUBLIC_CLARITY_PROJECT_ID }}
           PUBLIC_AMAZON_ASSOCIATE_TAG: ${{ vars.PUBLIC_AMAZON_ASSOCIATE_TAG }}
           AMAZON_CREATORS_API_ACCESS_KEY: ${{ secrets.AMAZON_CREATORS_API_ACCESS_KEY }}
           AMAZON_CREATORS_API_SECRET_KEY: ${{ secrets.AMAZON_CREATORS_API_SECRET_KEY }}
