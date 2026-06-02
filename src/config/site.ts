@@ -5,11 +5,11 @@ export const site = {
   tagline: 'Amazonサブスクの選び方・活用法',
   description:
     'Kindle UnlimitedとAudibleを中心に、Amazonの読書・聴書サブスクの比較・活用法・作品の読み放題状況を解説するメディアです。',
-  url: 'https://amasub.tateku.net',
+  url: 'https://amasub.tadeku.net',
   author: 'アマサブ編集部',
   locale: 'ja_JP',
   language: 'ja',
-  email: 'contact@tateku.net',
+  email: 'contact@tadeku.net',
   social: {
     x: '',
   },

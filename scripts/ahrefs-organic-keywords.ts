@@ -4,7 +4,7 @@
  * 用法:
  *   AHREFS_API_KEY=xxx npm run ahrefs:keywords
  *   npm run ahrefs:keywords -- --target=unlimilab.com/ --limit=1000 --max-pages=40
- *   npm run ahrefs:keywords -- --target=amasub.tateku.net --order-by=volume_merged:desc
+ *   npm run ahrefs:keywords -- --target=amasub.tadeku.net --order-by=volume_merged:desc
  */
 
 import { mkdir, writeFile } from 'node:fs/promises';

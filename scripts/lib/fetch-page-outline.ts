@@ -15,7 +15,7 @@ export interface PageOutline {
 }
 
 const USER_AGENT =
-  'Mozilla/5.0 (compatible; AmasubResearchBot/1.0; +https://amasub.tateku.net)';
+  'Mozilla/5.0 (compatible; AmasubResearchBot/1.0; +https://amasub.tadeku.net)';
 
 const FETCH_TIMEOUT_MS = 15_000;
 

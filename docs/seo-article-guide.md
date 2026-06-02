@@ -12,7 +12,7 @@
 | 項目 | 内容 |
 |------|------|
 | サイト名 | アマサブ（Amasub） |
-| URL | https://amasub.tateku.net |
+| URL | https://amasub.tadeku.net |
 | テーマ | Amazonサブスクの選び方・活用法 |
 | 主対象サービス | **Kindle Unlimited**、**Audible**（この2つのみ） |
 | 読者 | サブスク加入を検討中の人、作品ごとの読み放題/聴き放題を調べる人 |

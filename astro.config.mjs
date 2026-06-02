@@ -12,7 +12,7 @@ function isExcludedFromSitemap(pathname) {
 }
 
 export default defineConfig({
-  site: 'https://amasub.tateku.net',
+  site: 'https://amasub.tadeku.net',
   trailingSlash: 'always',
   redirects: {
     '/search': '/',
