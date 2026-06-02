@@ -1,0 +1,34 @@
+---
+import { services, type ServiceId } from '@/config/site';
+import { affiliateUrl } from '@/lib/amazon';
+import ServicePromoBanner from '@/components/ServicePromoBanner.astro';
+
+const promoOrder: ServiceId[] = ['kindle-unlimited', 'audible'];
+---
+
+<nav class="sidebar-promos" aria-label="サブスクの紹介">
+  <p class="sidebar-promos__heading">おすすめサブスク</p>
+  <ul class="sidebar-promos__list">
+    {
+      promoOrder.map((id) => {
+        const svc = services[id];
+        const url = affiliateUrl(svc.officialUrl);
+        return (
+          <li>
+            <a
+              class={`sidebar-promo sidebar-promo--${id}`}
+              href={url}
+              rel="nofollow sponsored noopener"
+              target="_blank"
+            >
+              <ServicePromoBanner id={id} />
+              <span class="sr-only">
+                {svc.name}の公式ページへ。{svc.description}
+              </span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>

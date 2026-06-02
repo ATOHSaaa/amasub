@@ -1,0 +1,19 @@
+---
+import { site } from '@/config/site';
+import SiteSearch from '@/components/SiteSearch.astro';
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-logo" aria-label={`${site.name} トップ`}>
+      {site.name}
+    </a>
+    <nav class="site-nav" aria-label="メインナビゲーション">
+      <a class="site-nav-control" href="/posts/">記事一覧</a>
+      <a class="site-nav-control" href="/about/">About</a>
+      <div class="site-nav-search">
+        <SiteSearch instance="header" variant="nav" />
+      </div>
+    </nav>
+  </div>
+</header>

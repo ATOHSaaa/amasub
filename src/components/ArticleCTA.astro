@@ -1,0 +1,49 @@
+---
+import { services, affiliate, type ServiceId } from '@/config/site';
+import { affiliateUrl } from '@/lib/amazon';
+
+interface Props {
+  /** 表示するCTA。未指定時は services から推論 */
+  cta?: 'audible' | 'kindle-unlimited' | 'both' | 'none';
+  postServices?: ServiceId[];
+}
+
+const { cta: ctaOverride, postServices = [] } = Astro.props;
+
+function resolveCtaTypes(): ServiceId[] {
+  if (ctaOverride === 'none') return [];
+  if (ctaOverride === 'both') return ['kindle-unlimited', 'audible'];
+  if (ctaOverride === 'audible') return ['audible'];
+  if (ctaOverride === 'kindle-unlimited') return ['kindle-unlimited'];
+  if (postServices.length > 0) return postServices;
+  return ['kindle-unlimited', 'audible'];
+}
+
+const ctaTypes = resolveCtaTypes();
+---
+
+{
+  ctaTypes.map((id) => {
+    const svc = services[id];
+    const url = affiliateUrl(svc.officialUrl);
+    return (
+      <aside class={`cta-box cta-box--${id}`} aria-label={`${svc.name}の紹介`}>
+        <div class="cta-box__head">
+          <span class="cta-box__label">{svc.shortName}</span>
+          <h2 class="cta-box__title">{svc.name}を試す</h2>
+        </div>
+        <p class="cta-box__desc">{svc.description}</p>
+        <a
+          class="cta-box__button"
+          href={url}
+          rel="nofollow sponsored noopener"
+          target="_blank"
+        >
+          {svc.name}の公式ページを見る
+        </a>
+      </aside>
+    );
+  })
+}
+
+<p class="affiliate-notice">{affiliate.disclosure}</p>

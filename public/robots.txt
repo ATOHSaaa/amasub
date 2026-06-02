@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://amasub.tateku.net/sitemap-index.xml

@@ -1,0 +1,66 @@
+---
+import { site } from '@/config/site';
+import { canonicalUrl, absoluteImageUrl } from '@/lib/seo';
+
+interface Props {
+  title: string;
+  description: string;
+  pathname: string;
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  pathname,
+  ogType = 'website',
+  ogImage,
+  publishedTime,
+  modifiedTime,
+  author = site.author,
+  noindex = false,
+} = Astro.props;
+
+const fullTitle = title === site.name ? title : `${title} | ${site.name}`;
+const url = canonicalUrl(pathname);
+const image = absoluteImageUrl(ogImage ?? '/og-default.svg');
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={url} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={url} />
+<meta property="og:type" content={ogType} />
+<meta property="og:image" content={image} />
+<meta property="og:locale" content={site.locale} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+
+{ogType === 'article' && publishedTime && (
+  <meta property="article:published_time" content={publishedTime} />
+)}
+{ogType === 'article' && modifiedTime && (
+  <meta property="article:modified_time" content={modifiedTime} />
+)}
+{ogType === 'article' && (
+  <meta property="article:author" content={author} />
+)}
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="alternate" type="application/rss+xml" title={`${site.name} RSS`} href="/rss.xml" />

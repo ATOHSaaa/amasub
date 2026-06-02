@@ -1,0 +1,45 @@
+---
+import type { CreatorsProduct } from '@/lib/amazon';
+
+interface Props {
+  product: CreatorsProduct;
+  /** カード上の短いラベル（例: 2024年モデル） */
+  label?: string;
+}
+
+const { product, label } = Astro.props;
+---
+
+<article class="amazon-product-card">
+  <a
+    class="amazon-product-card__link"
+    href={product.detailPageUrl}
+    rel="nofollow sponsored noopener"
+    target="_blank"
+  >
+    {product.imageUrl && (
+      <div class="amazon-product-card__image-wrap">
+        <img
+          src={product.imageUrl}
+          alt=""
+          width="160"
+          height="160"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    )}
+    <div class="amazon-product-card__body">
+      {label && <p class="amazon-product-card__label">{label}</p>}
+      <h3 class="amazon-product-card__title">{product.title}</h3>
+      {product.price ? (
+        <p class="amazon-product-card__price">{product.price}</p>
+      ) : (
+        <p class="amazon-product-card__price amazon-product-card__price--muted">
+          価格は商品ページでご確認ください
+        </p>
+      )}
+      <p class="amazon-product-card__cta">Amazon.co.jpで見る</p>
+    </div>
+  </a>
+</article>

@@ -1,0 +1,111 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AmazonProductCards from '@/components/AmazonProductCards.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
+import ArticleCTA from '@/components/ArticleCTA.astro';
+import ShareButtons from '@/components/ShareButtons.astro';
+import RelatedPosts from '@/components/RelatedPosts.astro';
+import EditorProfile from '@/components/EditorProfile.astro';
+import StructuredData from '@/components/StructuredData.astro';
+import { formatDate, formatDateISO, getRelatedPosts, type Post } from '@/lib/posts';
+import type { CreatorsProduct } from '@/lib/amazon';
+import { services } from '@/config/site';
+import type { ServiceId } from '@/config/site';
+
+interface ProductEntry {
+  asin: string;
+  label?: string;
+}
+
+interface Props {
+  post: Post;
+  allPosts: Post[];
+  headings: { depth: number; slug: string; text: string }[];
+  amazonProducts?: CreatorsProduct[];
+  productEntries?: ProductEntry[];
+}
+
+const {
+  post,
+  allPosts,
+  headings,
+  amazonProducts = [],
+  productEntries = [],
+} = Astro.props;
+const { title, description, pubDate, updatedDate, author, services: postServices, cta, ogImage } =
+  post.data;
+const pathname = `/posts/${post.id}/`;
+const related = getRelatedPosts(post, allPosts);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  pathname={pathname}
+  ogType="article"
+  ogImage={ogImage}
+  publishedTime={formatDateISO(pubDate)}
+  modifiedTime={formatDateISO(updatedDate ?? pubDate)}
+  structuredData="Article"
+  breadcrumbs={[
+    { name: 'ホーム', path: '/' },
+    { name: '記事一覧', path: '/posts/' },
+    { name: title, path: pathname },
+  ]}
+>
+  <StructuredData
+    type="BreadcrumbList"
+    pathname={pathname}
+    breadcrumbs={[
+      { name: 'ホーム', path: '/' },
+      { name: '記事一覧', path: '/posts/' },
+      { name: title, path: pathname },
+    ]}
+  />
+
+  <article class="container--narrow" itemscope itemtype="https://schema.org/Article">
+    <header class="article-header">
+      <p class="article-header__meta">
+        {postServices.map((id: ServiceId) => (
+          <span class={`service-badge service-badge--${id}`}>{services[id].shortName}</span>
+        ))}
+        <time datetime={pubDate.toISOString()} itemprop="datePublished">
+          {formatDate(pubDate)}
+        </time>
+        {updatedDate && updatedDate > pubDate && (
+          <>
+            {' '}
+            （更新:{' '}
+            <time datetime={updatedDate.toISOString()} itemprop="dateModified">
+              {formatDate(updatedDate)}
+            </time>
+            ）
+          </>
+        )}
+        {' · '}
+        <span itemprop="author">{author}</span>
+      </p>
+      <h1 itemprop="headline">{title}</h1>
+      {description && <p itemprop="description">{description}</p>}
+    </header>
+
+    <TableOfContents headings={headings} />
+
+    <AmazonProductCards products={amazonProducts} entries={productEntries} />
+
+    <div class="prose" itemprop="articleBody">
+      <slot />
+    </div>
+
+    <ShareButtons title={title} pathname={pathname} />
+
+    <ArticleCTA cta={cta} postServices={postServices} />
+
+    <RelatedPosts posts={related} />
+
+    <EditorProfile
+      headingId="editor-profile-article"
+      class="editor-profile--below-article"
+    />
+  </article>
+</BaseLayout>

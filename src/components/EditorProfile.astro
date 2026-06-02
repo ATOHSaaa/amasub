@@ -1,0 +1,36 @@
+---
+import { editor, site } from '@/config/site';
+
+interface Props {
+  /** 見出しの id（同一ページで複数使うときはユニークに） */
+  headingId?: string;
+  class?: string;
+}
+
+const { headingId = 'editor-profile-heading', class: className } = Astro.props;
+const hasX = Boolean(site.social.x);
+---
+
+<section
+  class:list={['editor-profile', className]}
+  aria-labelledby={headingId}
+>
+  <div class="editor-profile__avatar">
+    <img src="/favicon.svg" width="72" height="72" alt="" />
+  </div>
+  <h2 id={headingId} class="editor-profile__name">
+    {editor.name}
+  </h2>
+  <p class="editor-profile__role">{editor.role}</p>
+  <p class="editor-profile__bio">{editor.bio}</p>
+  <p class="editor-profile__links">
+    <a href={editor.aboutUrl}>プロフィール・編集方針</a>
+  </p>
+  {hasX && (
+    <p class="editor-profile__social">
+      <a href={site.social.x} rel="me noopener noreferrer" target="_blank">
+        X（旧Twitter）
+      </a>
+    </p>
+  )}
+</section>

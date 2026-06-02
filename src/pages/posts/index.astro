@@ -1,0 +1,24 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+import { getPublishedPosts } from '@/lib/posts';
+
+const posts = await getPublishedPosts();
+---
+
+<BaseLayout
+  title="記事一覧"
+  description="Kindle Unlimited・Audibleを中心としたサブスク活用法・比較・作品ガイドの記事一覧です。"
+  pathname="/posts/"
+>
+  <h1 class="page-title">記事一覧</h1>
+  {posts.length === 0 ? (
+    <p>記事を準備中です。</p>
+  ) : (
+    <div class="post-list">
+      {posts.map((post) => (
+        <PostCard post={post} />
+      ))}
+    </div>
+  )}
+</BaseLayout>

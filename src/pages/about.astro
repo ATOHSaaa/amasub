@@ -1,0 +1,26 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { site } from '@/config/site';
+---
+
+<BaseLayout
+  title="About"
+  description={`${site.name}について。Kindle UnlimitedとAudibleを中心に、Amazonサブスクの選び方・活用法を発信しています。`}
+  pathname="/about/"
+>
+  <h1 class="page-title">About</h1>
+  <div class="container--narrow">
+    <p>
+      <strong>{site.name}</strong>は、{site.tagline}をテーマにしたメディアです。
+    </p>
+    <p>
+      Kindle UnlimitedとAudibleを中心に、サブスクの比較・活用法、作品ごとの読み放題・聴き放題の状況などを解説しています。
+    </p>
+    <h2>編集方針</h2>
+    <ul>
+      <li>実際にサービスを利用したうえでの体験・調査に基づいて執筆します</li>
+      <li>料金・対象作品は変更されるため、購入・登録前は必ず公式サイトでご確認ください</li>
+      <li>当サイトのリンクからAmazon.co.jpで購入・登録された場合、紹介料が発生することがあります</li>
+    </ul>
+  </div>
+</BaseLayout>

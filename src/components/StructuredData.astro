@@ -1,0 +1,84 @@
+---
+import { site } from '@/config/site';
+import { canonicalUrl, absoluteImageUrl } from '@/lib/seo';
+
+interface Props {
+  type: 'WebSite' | 'Article' | 'BreadcrumbList';
+  pathname: string;
+  title?: string;
+  description?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+  image?: string;
+  breadcrumbs?: { name: string; path: string }[];
+}
+
+const {
+  type,
+  pathname,
+  title,
+  description,
+  publishedTime,
+  modifiedTime,
+  image,
+  breadcrumbs,
+} = Astro.props;
+
+let jsonLd: Record<string, unknown>;
+
+if (type === 'WebSite') {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: site.name,
+    alternateName: site.alternateName,
+    url: site.url,
+    description: site.description,
+    inLanguage: site.language,
+    publisher: {
+      '@type': 'Organization',
+      name: site.author,
+      url: site.url,
+    },
+  };
+} else if (type === 'Article' && title && description && publishedTime) {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    datePublished: publishedTime,
+    dateModified: modifiedTime ?? publishedTime,
+    author: {
+      '@type': 'Organization',
+      name: site.author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: site.author,
+      url: site.url,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl(pathname),
+    },
+    image: absoluteImageUrl(image),
+    inLanguage: site.language,
+  };
+} else if (type === 'BreadcrumbList' && breadcrumbs) {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: canonicalUrl(item.path),
+    })),
+  };
+} else {
+  jsonLd = {};
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

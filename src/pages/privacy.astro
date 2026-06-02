@@ -1,0 +1,51 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { site } from '@/config/site';
+---
+
+<BaseLayout
+  title="プライバシーポリシー"
+  description={`${site.name}のプライバシーポリシー。個人情報の取り扱いとアクセス解析について。`}
+  pathname="/privacy/"
+>
+  <h1 class="page-title">プライバシーポリシー</h1>
+  <div class="container--narrow">
+    <p>
+      {site.name}（以下「当サイト」）は、ユーザーのプライバシーを尊重し、個人情報の保護に努めます。
+    </p>
+
+    <h2>アクセス解析ツール</h2>
+    <p>
+      当サイトでは、サイトの利用状況を把握するため、以下のツールを使用する場合があります。
+    </p>
+    <ul>
+      <li>
+        <strong>Google Analytics 4</strong> — Google LLCが提供するアクセス解析サービスです。Cookieを使用して匿名のトラフィックデータを収集します。詳細は
+        <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Googleのプライバシーポリシー</a>
+        をご確認ください。
+      </li>
+      <li>
+        <strong>Microsoft Clarity</strong> — Microsoft Corporationが提供する行動分析ツールです。セッション記録等を行う場合があります。詳細は
+        <a href="https://privacy.microsoft.com/" rel="noopener noreferrer" target="_blank">Microsoftのプライバシーポリシー</a>
+        をご確認ください。
+      </li>
+    </ul>
+
+    <h2>Cookieについて</h2>
+    <p>
+      当サイトおよび上記ツールは、利便性向上・統計取得のためにCookieを使用することがあります。ブラウザの設定によりCookieを無効にできますが、一部機能が制限される場合があります。
+    </p>
+
+    <h2>アフィリエイトプログラム</h2>
+    <p>
+      当サイトはAmazon.co.jpアソシエイト・プログラムの参加者です。リンク経由の購入・登録により、運営者に紹介料が支払われる場合があります。
+    </p>
+
+    <h2>お問い合わせ</h2>
+    <p>
+      個人情報の取り扱いに関するお問い合わせは、<a href="/contact/">お問い合わせページ</a>よりご連絡ください。
+    </p>
+
+    <p><small>制定日: 2026年6月1日</small></p>
+  </div>
+</BaseLayout>

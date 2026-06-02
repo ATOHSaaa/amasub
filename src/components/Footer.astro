@@ -1,0 +1,21 @@
+---
+import { site, affiliate } from '@/config/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <nav aria-label="フッターナビゲーション">
+      <ul class="site-footer__nav">
+        <li><a href="/about/">About</a></li>
+        <li><a href="/privacy/">プライバシーポリシー</a></li>
+        <li><a href="/contact/">お問い合わせ</a></li>
+        <li><a href="/sitemap/">サイトマップ</a></li>
+      </ul>
+    </nav>
+    <p>
+      © {year} {site.name} — {site.tagline}
+    </p>
+    <p class="affiliate-notice">{affiliate.disclosure}</p>
+  </div>
+</footer>

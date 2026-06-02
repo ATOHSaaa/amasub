@@ -1,0 +1,163 @@
+---
+interface Props {
+  /** 同一ページ内で一意のID（header / home など） */
+  instance?: string;
+  variant?: 'nav' | 'hero';
+}
+
+const { instance = 'header', variant = 'nav' } = Astro.props;
+const inputId = `site-search-input-${instance}`;
+const resultsId = `site-search-results-${instance}`;
+const isNav = variant === 'nav';
+---
+
+<div
+  class:list={[isNav ? 'site-nav-search__box' : 'site-search-hero']}
+  data-site-search
+  data-site-search-variant={variant}
+>
+  <label class="sr-only" for={inputId}>記事検索</label>
+  <input
+    type="search"
+    id={inputId}
+    class:list={[
+      'site-search__input',
+      isNav && 'site-nav-control site-nav-search__input',
+      !isNav && 'site-search-hero__input',
+    ]}
+    placeholder={isNav ? '検索' : '記事を検索'}
+    autocomplete="off"
+    enterkeyhint="search"
+  />
+  <div
+    id={resultsId}
+    class:list={[isNav ? 'site-nav-search__results' : 'site-search-hero__results']}
+    data-site-search-results
+    hidden
+  ></div>
+</div>
+
+<script is:inline>
+  (function () {
+    if (!window.__amasubSiteSearch) {
+      window.__amasubSiteSearch = { pagefind: null, ready: false, initPromise: null };
+
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Node)) return;
+        if (target.closest?.('[data-site-search]')) return;
+        document.querySelectorAll('[data-site-search-results]').forEach((el) => {
+          el.hidden = true;
+        });
+      });
+    }
+
+    const store = window.__amasubSiteSearch;
+
+    async function ensurePagefind() {
+      if (store.ready) return store.pagefind;
+      if (!store.initPromise) {
+        store.initPromise = (async () => {
+          try {
+            const pagefind = await import('/pagefind/pagefind.js');
+            await pagefind.init();
+            store.pagefind = pagefind;
+            store.ready = true;
+            return pagefind;
+          } catch {
+            store.ready = false;
+            return null;
+          }
+        })();
+      }
+      return store.initPromise;
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function bindSearch(root) {
+      if (root.dataset.siteSearchBound === 'true') return;
+      root.dataset.siteSearchBound = 'true';
+
+      const input = root.querySelector('input[type="search"]');
+      const resultsEl = root.querySelector('[data-site-search-results]');
+      if (!input || !resultsEl) return;
+
+      function hideResults() {
+        resultsEl.hidden = true;
+        resultsEl.innerHTML = '';
+      }
+
+      async function renderResults(searchResult) {
+        if (!searchResult?.results?.length) {
+          resultsEl.innerHTML =
+            '<p class="site-search__empty">該当する記事がありません</p>';
+          resultsEl.hidden = false;
+          return;
+        }
+
+        const hits = await Promise.all(
+          searchResult.results.slice(0, 8).map(async (result) => {
+            return result.data();
+          }),
+        );
+
+        resultsEl.innerHTML = hits
+          .map((data) => {
+            const title = escapeHtml(data.meta?.title || data.url);
+            const excerpt = data.excerpt || '';
+            const url = escapeHtml(data.url);
+            return `<a class="site-search__hit" href="${url}">
+  <span class="site-search__hit-title">${title}</span>
+  ${excerpt ? `<span class="site-search__hit-excerpt">${excerpt}</span>` : ''}
+</a>`;
+          })
+          .join('');
+        resultsEl.hidden = false;
+      }
+
+      async function runSearch() {
+        const term = input.value.trim();
+        if (!term) {
+          hideResults();
+          return;
+        }
+
+        const pf = await ensurePagefind();
+        if (!pf) return;
+
+        const searchResult = await pf.debouncedSearch(term, {}, 250);
+        if (!searchResult) return;
+        await renderResults(searchResult);
+      }
+
+      ensurePagefind().then((pf) => {
+        if (!pf) {
+          input.disabled = true;
+          input.placeholder = 'npm run build 後に利用';
+        }
+      });
+
+      input.addEventListener('input', runSearch);
+      input.addEventListener('focus', () => {
+        if (input.value.trim() && resultsEl.innerHTML) {
+          resultsEl.hidden = false;
+        }
+      });
+      input.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          hideResults();
+          input.blur();
+        }
+      });
+    }
+
+    document.querySelectorAll('[data-site-search]').forEach(bindSearch);
+  })();
+</script>

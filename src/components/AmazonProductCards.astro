@@ -1,0 +1,38 @@
+---
+import AmazonProductCard from '@/components/AmazonProductCard.astro';
+import type { CreatorsProduct } from '@/lib/amazon';
+
+interface ProductEntry {
+  asin: string;
+  label?: string;
+}
+
+interface Props {
+  products: CreatorsProduct[];
+  entries: ProductEntry[];
+  title?: string;
+}
+
+const { products, entries, title = '製品情報（Amazon.co.jp）' } = Astro.props;
+
+const labelByAsin = new Map(entries.map((e) => [e.asin, e.label]));
+---
+
+{products.length > 0 && (
+  <section class="amazon-product-cards" aria-label={title}>
+    <h2 class="amazon-product-cards__heading">{title}</h2>
+    <p class="amazon-product-cards__note">
+      価格・在庫・仕様は変更されることがあります。購入前に各商品ページの表示をご確認ください。
+    </p>
+    <ul class="amazon-product-cards__list">
+      {products.map((product) => (
+        <li>
+          <AmazonProductCard
+            product={product}
+            label={labelByAsin.get(product.asin)}
+          />
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

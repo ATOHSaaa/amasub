@@ -1,0 +1,24 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { site } from '@/config/site';
+---
+
+<BaseLayout
+  title="お問い合わせ"
+  description={`${site.name}へのお問い合わせ方法。`}
+  pathname="/contact/"
+>
+  <h1 class="page-title">お問い合わせ</h1>
+  <div class="container--narrow">
+    <p>
+      記事の誤りのご指摘、取材・提携のご相談などは、下記メールアドレスまでお送りください。
+    </p>
+    <p>
+      <strong>メール:</strong>{' '}
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+    </p>
+    <p>
+      内容によっては返信までお時間をいただく場合があります。あらかじめご了承ください。
+    </p>
+  </div>
+</BaseLayout>

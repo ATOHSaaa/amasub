@@ -1,0 +1,71 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+interface TocSection {
+  heading: Heading;
+  children: Heading[];
+}
+
+const { headings } = Astro.props;
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+
+function buildTocSections(items: Heading[]): TocSection[] {
+  const sections: TocSection[] = [];
+  let current: TocSection | null = null;
+
+  for (const heading of items) {
+    if (heading.depth === 2) {
+      current = { heading, children: [] };
+      sections.push(current);
+    } else if (heading.depth === 3 && current) {
+      current.children.push(heading);
+    }
+  }
+
+  return sections;
+}
+
+/** H3の「1. 」など手順番号は、入れ子リスト側で付くため目次表示から除く */
+function tocLabel(text: string, depth: number): string {
+  if (depth === 3) {
+    return text.replace(/^\d+\.\s*/, '');
+  }
+  return text;
+}
+
+const tocSections = buildTocSections(tocHeadings);
+---
+
+{
+  tocSections.length > 0 && (
+    <nav class="toc" aria-label="目次">
+      <p class="toc__title">目次</p>
+      <ol class="toc__list">
+        {tocSections.map((section) => (
+          <li class="toc__section">
+            <a href={`#${section.heading.slug}`}>
+              {tocLabel(section.heading.text, section.heading.depth)}
+            </a>
+            {section.children.length > 0 && (
+              <ol class="toc__sublist">
+                {section.children.map((child) => (
+                  <li>
+                    <a href={`#${child.slug}`}>{tocLabel(child.text, child.depth)}</a>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}

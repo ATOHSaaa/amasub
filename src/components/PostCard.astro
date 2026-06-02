@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate } from '@/lib/posts';
+import { services } from '@/config/site';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, services: postServices } = post.data;
+const href = `/posts/${post.id}/`;
+---
+
+<a href={href} class="post-card">
+  <h2 class="post-card__title">{title}</h2>
+  <p class="post-card__meta">
+    {postServices.map((id) => (
+      <span class={`service-badge service-badge--${id}`}>{services[id].shortName}</span>
+    ))}
+    <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+  </p>
+  {description && <p class="post-card__desc">{description}</p>}
+</a>
