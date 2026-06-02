@@ -7,7 +7,7 @@ export function canonicalUrl(pathname: string): string {
 }
 
 export function absoluteImageUrl(imagePath?: string): string {
-  if (!imagePath) return `${site.url}/og-default.svg`;
+  if (!imagePath) return `${site.url}/og-default.png`;
   if (imagePath.startsWith('http')) return imagePath;
   return `${site.url}${imagePath.startsWith('/') ? imagePath : `/${imagePath}`}`;
 }
